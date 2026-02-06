@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Login / Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(180deg,#081f44,#0b2c5f);
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.card{
+  background:#102f66;
+  padding:30px;
+  border-radius:18px;
+  width:320px;
+  text-align:center;
+}
+h2{
+  margin-top:0;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:8px;
+  font-size:15px;
+}
+button{
+  margin-top:18px;
+  padding:14px;
+  width:100%;
+  border:none;
+  border-radius:30px;
+  background:#ffb703;
+  color:#000;
+  font-size:17px;
+  cursor:pointer;
+}
+.toggle{
+  margin-top:15px;
+  font-size:14px;
+  cursor:pointer;
+  color:#ffcc00;
+}
+.status{
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2 id="title">Login</h2>
+
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="submit()">Continue</button>
+
+  <div class="toggle" onclick="toggleMode()">Don't have an account? Register</div>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+let mode = "login";
+
+function toggleMode(){
+  mode = mode === "login" ? "register" : "login";
+  document.getElementById("title").innerText =
+    mode === "login" ? "Login" : "Register";
+  document.querySelector(".toggle").innerText =
+    mode === "login" ? "Don't have an account? Register" : "Already have an account? Login";
+}
+
+function submit(){
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
+  const status = document.getElementById("status");
+
+  if(u.length < 3 || p.length < 4){
+    status.innerText = "Invalid details";
+    return;
+  }
+
+  if(mode === "register"){
+    localStorage.setItem("user_"+u,p);
+    localStorage.setItem("currentUser",u);
+    if(!localStorage.getItem("spins")) localStorage.setItem("spins",3);
+    status.innerText = "Registered successfully";
+  }else{
+    const saved = localStorage.getItem("user_"+u);
+    if(saved !== p){
+      status.innerText = "Wrong username or password";
+      return;
+    }
+    localStorage.setItem("currentUser",u);
+    status.innerText = "Login successful";
+  }
+
+  setTimeout(()=>{
+    window.location.href = "dashboard.html";
+  },800);
+}
+</script>
+
+</body>
+</html>

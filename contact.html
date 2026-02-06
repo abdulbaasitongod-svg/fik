@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Contact</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0b2c5f;color:#fff;}
+.topbar{padding:14px;background:#081f44;text-align:center;font-size:18px;}
+.container{padding:20px;max-width:500px;margin:0 auto;}
+input, textarea{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none;font-size:14px;}
+button{margin-top:15px;padding:14px 30px;border:none;border-radius:25px;background:#ffb703;color:#000;font-size:16px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="topbar">📬 Contact Us</div>
+<div class="container">
+  <input id="name" placeholder="Your Name">
+  <input id="email" placeholder="Your Email">
+  <textarea id="message" placeholder="Your Message"></textarea>
+  <button onclick="sendMessage()">Send</button>
+  <div id="status" style="margin-top:10px;font-size:14px;"></div>
+</div>
+
+<script>
+function sendMessage(){
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const msg = document.getElementById("message").value.trim();
+  const status = document.getElementById("status");
+
+  if(!name || !email || !msg){
+    status.innerText = "All fields required";
+    return;
+  }
+
+  // Placeholder: in real app, connect to backend/email service
+  status.innerText = "Message submitted successfully. We will contact you.";
+  document.getElementById("name").value="";
+  document.getElementById("email").value="";
+  document.getElementById("message").value="";
+}
+</script>
+</body>
+</html>

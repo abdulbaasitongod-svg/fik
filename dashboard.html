@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Dashboard</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg,#0b1d3a,#0f2a55);
+  color: #fff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #08162f;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #ffcc00;
+}
+
+.balance {
+  background: #122b55;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #142f5e;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.4);
+}
+
+.card span {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #08162f;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.footer a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="user">
+    <div class="avatar"></div>
+    <div>Guest</div>
+  </div>
+  <div class="balance">FC: <span id="bal">0</span></div>
+</div>
+
+<div class="grid">
+  <div class="card" onclick="go('spin.html')">
+    <span>🎡</span>Lucky Spin
+  </div>
+  <div class="card" onclick="go('watch.html')">
+    <span>🎥</span>Watch Ads
+  </div>
+  <div class="card" onclick="go('news.html')">
+    <span>📰</span>Read News
+  </div>
+  <div class="card" onclick="go('referral.html')">
+    <span>👥</span>Referrals
+  </div>
+</div>
+
+<div class="footer">
+  <a href="withdraw.html">💰 Withdraw</a>
+  <a href="terms.html">📜 Terms</a>
+  <a href="privacy.html">🔐 Privacy</a>
+</div>
+
+<script>
+function go(page){
+  window.location.href = page;
+}
+
+document.getElementById("bal").textContent =
+  localStorage.getItem("balance") || 0;
+</script>
+
+</body>
+</html>

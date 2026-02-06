@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Trivia Games</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;background:#0b2c5f;font-family:Arial;color:#fff}
+.topbar{background:#081f44;padding:14px;text-align:center;font-size:18px}
+.container{padding:20px;max-width:600px;margin:auto}
+.card{background:#102f66;border-radius:16px;padding:20px}
+button{margin-top:12px;padding:12px 24px;border:none;border-radius:24px;background:#ffb703;color:#000;font-size:16px;cursor:pointer}
+.option{display:block;margin-top:10px;padding:10px;border-radius:10px;background:#153a7a;cursor:pointer}
+.option:hover{background:#1d4ea0}
+.status{margin-top:15px;font-size:15px}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">🧠 African Trivia</div>
+
+<div class="container">
+  <div class="card">
+    <h3 id="question"></h3>
+    <div id="options"></div>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+const todayKey = "trivia_" + new Date().toISOString().slice(0,10);
+
+const questions = [
+  {
+    q: "Who is the current president of Ghana?",
+    options: ["Nana Akufo-Addo","John Mahama","Yoweri Museveni","Paul Kagame"],
+    answer: 0
+  },
+  {
+    q: "Which country is led by Paul Kagame?",
+    options: ["Kenya","Rwanda","Uganda","Burundi"],
+    answer: 1
+  },
+  {
+    q: "Who is Nigeria’s president (2024)?",
+    options: ["Buhari","Tinubu","Atiku","Obasanjo"],
+    answer: 1
+  }
+];
+
+// daily rotation
+const index = new Date().getDate() % questions.length;
+const q = questions[index];
+
+document.getElementById("question").innerText = q.q;
+
+const optDiv = document.getElementById("options");
+q.options.forEach((text,i)=>{
+  const d = document.createElement("div");
+  d.className="option";
+  d.innerText=text;
+  d.onclick=()=>answer(i);
+  optDiv.appendChild(d);
+});
+
+function answer(i){
+  if(localStorage.getItem(todayKey)){
+    document.getElementById("status").innerText="Already answered today.";
+    return;
+  }
+
+  if(i === q.answer){
+    let fc = parseInt(localStorage.getItem("fc")) || 0;
+    fc += 50;
+    localStorage.setItem("fc", fc);
+    document.getElementById("status").innerText="✅ Correct! +50 FC";
+  }else{
+    document.getElementById("status").innerText="❌ Wrong answer";
+  }
+
+  localStorage.setItem(todayKey,true);
+}
+</script>
+
+</body>
+</html>

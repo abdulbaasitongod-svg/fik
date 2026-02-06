@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Watch Ads</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b2c5f;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+  text-align:center;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  background:#081f44;
+}
+.container{
+  margin-top:60px;
+}
+.ad-box{
+  width:300px;
+  height:170px;
+  margin:0 auto 20px;
+  background:#000;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+button{
+  padding:14px 40px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  background:#ffb703;
+  color:#000;
+  cursor:pointer;
+}
+button:disabled{
+  background:#777;
+}
+.timer{
+  margin-top:15px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div>🎥 Watch Ads</div>
+  <div>Spins: <span id="spins">0</span></div>
+</div>
+
+<div class="container">
+  <div class="ad-box" id="adBox">Ad Ready</div>
+  <button id="watchBtn">Watch Ad</button>
+  <div class="timer" id="timer"></div>
+</div>
+
+<script>
+let spins = parseInt(localStorage.getItem("spins")) || 0;
+let lastWatch = parseInt(localStorage.getItem("lastWatch")) || 0;
+
+document.getElementById("spins").innerText = spins;
+
+const watchBtn = document.getElementById("watchBtn");
+const timerEl = document.getElementById("timer");
+const adBox = document.getElementById("adBox");
+
+function checkCooldown(){
+  const now = Date.now();
+  const diff = now - lastWatch;
+  const cooldown = 5 * 60 * 1000; // 5 minutes
+  if(diff < cooldown){
+    watchBtn.disabled = true;
+    const remain = Math.ceil((cooldown-diff)/1000);
+    timerEl.innerText = "Next ad in " + remain + "s";
+    const i = setInterval(()=>{
+      const d = Date.now() - lastWatch;
+      const r = Math.ceil((cooldown-d)/1000);
+      timerEl.innerText = "Next ad in " + r + "s";
+      if(r<=0){
+        clearInterval(i);
+        timerEl.innerText = "";
+        watchBtn.disabled = false;
+      }
+    },1000);
+  }
+}
+checkCooldown();
+
+watchBtn.onclick = ()=>{
+  watchBtn.disabled = true;
+  adBox.innerText = "Playing Ad...";
+  let t = 10;
+  timerEl.innerText = "Watching: "+t+"s";
+  const adTimer = setInterval(()=>{
+    t--;
+    timerEl.innerText = "Watching: "+t+"s";
+    if(t<=0){
+      clearInterval(adTimer);
+      spins += 3;
+      localStorage.setItem("spins",spins);
+      lastWatch = Date.now();
+      localStorage.setItem("lastWatch",lastWatch);
+      document.getElementById("spins").innerText = spins;
+      adBox.innerText = "Ad Finished";
+      timerEl.innerText = "+3 Spins Added";
+      checkCooldown();
+    }
+  },1000);
+};
+</script>
+
+</body>
+</html>

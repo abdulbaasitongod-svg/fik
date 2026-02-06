@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – Referral</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b2c5f;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+  text-align:center;
+}
+.topbar{
+  padding:14px;
+  background:#081f44;
+  font-size:18px;
+}
+.container{
+  margin-top:60px;
+  padding:20px;
+}
+.box{
+  background:#102f66;
+  border-radius:14px;
+  padding:20px;
+  max-width:360px;
+  margin:0 auto;
+}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  margin-top:10px;
+  font-size:14px;
+}
+button{
+  margin-top:15px;
+  padding:12px 30px;
+  border:none;
+  border-radius:25px;
+  background:#ffb703;
+  color:#000;
+  font-size:16px;
+  cursor:pointer;
+}
+.stats{
+  margin-top:20px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">👥 Referral Program</div>
+
+<div class="container">
+  <div class="box">
+    <div>Your Referral Link</div>
+    <input id="refLink" readonly>
+    <button onclick="copyLink()">Copy Link</button>
+
+    <div class="stats">
+      Invites: <span id="invites">0</span><br>
+      Earned FC: <span id="earned">0</span>
+    </div>
+  </div>
+</div>
+
+<script>
+let userId = localStorage.getItem("userId");
+if(!userId){
+  userId = "FIK"+Math.floor(Math.random()*1000000);
+  localStorage.setItem("userId",userId);
+}
+
+const baseURL = "https://fikplatform.com/register?ref=";
+const refLink = baseURL + userId;
+document.getElementById("refLink").value = refLink;
+
+let invites = parseInt(localStorage.getItem("invites")) || 0;
+let earned = parseInt(localStorage.getItem("refEarned")) || 0;
+
+document.getElementById("invites").innerText = invites;
+document.getElementById("earned").innerText = earned;
+
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get("ref");
+
+if(ref && !localStorage.getItem("refUsed")){
+  localStorage.setItem("refUsed",true);
+  localStorage.setItem("referrer",ref);
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(refLink);
+}
+</script>
+
+</body>
+</html>

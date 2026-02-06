@@ -1,0 +1,50 @@
+body {
+  background: #0f172a;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spin-container {
+  text-align: center;
+  background: #020617;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+canvas {
+  margin: 15px 0;
+}
+
+.pointer {
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 25px solid red;
+  margin: -10px auto 10px;
+}
+
+button {
+  padding: 12px 30px;
+  font-size: 18px;
+  background: gold;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+.info {
+  margin-top: 10px;
+  font-size: 14px;
+}

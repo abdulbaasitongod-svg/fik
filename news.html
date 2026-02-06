@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIK – News & Earn</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b2c5f;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+}
+.topbar{
+  padding:14px;
+  background:#081f44;
+  font-size:18px;
+  text-align:center;
+}
+.container{
+  padding:20px;
+}
+.article{
+  background:#102f66;
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:20px;
+}
+.article h3{
+  margin-top:0;
+}
+.article p{
+  line-height:1.6;
+  font-size:15px;
+}
+.comment-box{
+  margin-top:15px;
+}
+textarea{
+  width:100%;
+  height:70px;
+  border-radius:8px;
+  border:none;
+  padding:10px;
+  font-size:14px;
+}
+button{
+  margin-top:10px;
+  padding:12px 30px;
+  border:none;
+  border-radius:25px;
+  background:#ffb703;
+  color:#000;
+  font-size:16px;
+  cursor:pointer;
+}
+.status{
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">📰 Read News & Earn</div>
+
+<div class="container">
+
+  <div class="article" id="article1">
+    <h3>Africa’s Digital Economy Is Growing Fast</h3>
+    <p>
+      Africa’s digital economy is expanding rapidly as more young people adopt
+      technology, mobile payments, and online platforms. Experts believe this
+      growth could create millions of jobs across the continent in the coming years.
+    </p>
+    <p>
+      Startups, content creators, and developers are now building solutions that
+      solve local problems while attracting global attention.
+    </p>
+
+    <div class="comment-box">
+      <textarea id="comment1" placeholder="Write a meaningful comment to earn FC"></textarea>
+      <button onclick="earnFromNews('article1','comment1')">Submit Comment</button>
+      <div class="status" id="status1"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function earnFromNews(articleId, commentId){
+  const key = "earned_"+articleId;
+  if(localStorage.getItem(key)){
+    document.getElementById("status1").innerText = "Already earned from this article.";
+    return;
+  }
+
+  const text = document.getElementById(commentId).value.trim();
+  if(text.length < 15){
+    document.getElementById("status1").innerText = "Comment too short.";
+    return;
+  }
+
+  let fc = parseInt(localStorage.getItem("fc")) || 0;
+  fc += 50;
+  localStorage.setItem("fc",fc);
+  localStorage.setItem(key,true);
+
+  document.getElementById("status1").innerText = "+50 FC earned successfully.";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Daily Check-In</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg,#0b1d3a,#0f2a55);
+    color: #fff;
+    padding: 20px;
+}
+
+.back-btn {
+    background: #ffcc00;
+    color: #0b1d3a;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.checkin-box {
+    background:#142f5e;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+}
+
+.days-row {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.day-box {
+    width:45px;
+    padding:8px;
+    border-radius:8px;
+    background:#0f2a55;
+}
+
+.day-box.active {
+    background:#1a3d7a;
+}
+
+.check-btn {
+    background:#ffcc00;
+    color:#0b1d3a;
+    border:none;
+    padding:10px 20px;
+    border-radius:20px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.check-btn:disabled {
+    opacity:0.6;
+    cursor:not-allowed;
+}
+
+.success-msg {
+    background:#1a3d7a;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+    font-weight:bold;
+    color:#ffcc00;
+}
+</style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="go('dashboard.html')">← Back to Dashboard</button>
+
+<div id="daily-checkin-container"></div>
+
+<script>
+
+const bonuses = [100,150,200,100,150,200,400];
+
+let checkinData = {
+    lastCheckinDate: null,
+    streak: 0,
+    history: Array(7).fill(false),
+    totalDays: 0
+};
+
+if(localStorage.getItem("ahaCheckinData")){
+    checkinData = JSON.parse(localStorage.getItem("ahaCheckinData"));
+}
+
+function saveData(){
+    localStorage.setItem("ahaCheckinData", JSON.stringify(checkinData));
+}
+
+function isYesterday(dateString){
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return new Date(dateString).toDateString() === yesterday.toDateString();
+}
+
+function renderCheckin(){
+
+    const container = document.getElementById("daily-checkin-container");
+    const today = new Date().toDateString();
+    const isCheckedIn = checkinData.lastCheckinDate === today;
+
+    // Reset if skipped day
+    if(checkinData.lastCheckinDate &&
+       !isYesterday(checkinData.lastCheckinDate) &&
+       checkinData.lastCheckinDate !== today){
+
+        checkinData.streak = 0;
+        checkinData.history = Array(7).fill(false);
+        saveData();
+    }
+
+    let html = `
+        <div class="checkin-box">
+            <h2>Daily Check-In</h2>
+            <div class="days-row">
+    `;
+
+    for(let i=0;i<7;i++){
+        const checked = checkinData.history[i];
+        html += `
+            <div class="day-box ${checked ? 'active' : ''}">
+                ${checked ? '💰' : '😞'} ${bonuses[i]}<br>
+                <span style="font-size:12px;">Day ${i+1}</span>
+            </div>
+        `;
+    }
+
+    html += `
+            </div>
+
+            <button id="checkin-btn" class="check-btn" ${isCheckedIn ? "disabled" : ""}>
+                ${isCheckedIn ? "Checked In" : "Check In Now"}
+            </button>
+
+            <div style="margin-top:10px;">
+                Total Days: <span id="total-days">${checkinData.totalDays}</span>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+
+    if(!isCheckedIn){
+        document.getElementById("checkin-btn").addEventListener("click", function(){
+
+            const bonus = bonuses[checkinData.streak];
+
+            checkinData.lastCheckinDate = today;
+            checkinData.history[checkinData.streak] = true;
+            checkinData.streak++;
+            checkinData.totalDays++;
+
+            if(checkinData.streak >= 7){
+                checkinData.streak = 0;
+                checkinData.history = Array(7).fill(false);
+            }
+
+            // Update balance
+            let balance = parseInt(localStorage.getItem("balance") || 0);
+            balance += bonus;
+            localStorage.setItem("balance", balance);
+
+            saveData();
+            renderCheckin();
+
+            container.innerHTML += `
+                <div class="success-msg">
+                    🎉 Check-in successful! You earned ${bonus} FC!
+                </div>
+            `;
+        });
+    }
+}
+
+function go(page){
+    window.location.href = page;
+}
+
+renderCheckin();
+
+</script>
+
+</body>
+</html>
